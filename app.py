@@ -25,7 +25,7 @@ search = DuckDuckGoSearchRun()
 
 load_dotenv()
 
-llm = OpenAI(temperature=0.6, streaming=True, openai_api_key=os.getenv("OPENAI_API_KEY"))
+llm = OpenAI(temperature=0.6, streaming=True, openai_api_key=st.secrets["OPENAI_API_KEY"])
 
 from langchain.agents import Tool
 
