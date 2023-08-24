@@ -64,7 +64,7 @@ uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
-    results_df = pd.DataFrame(columns=['prompt', 'results','Competitor','Topic','Week'])  # Create a new DataFrame to store results
+    results_df = pd.DataFrame(columns=['prompt', 'results'])  # Create a new DataFrame to store results
     for index, row in df.iterrows():
         prompt = row['Prompt']
         response = agent.run(prompt)
