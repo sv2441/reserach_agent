@@ -6,7 +6,7 @@ from langchain.utilities import PythonREPL
 from langchain.tools import DuckDuckGoSearchRun
 from langchain.agents import AgentType, initialize_agent, load_tools
 # from langchain.callbacks import StreamlitCallbackHandler
-from langchain.callbacks.manager import AsyncCallbackManager
+# from langchain.callbacks.manager import AsyncCallbackManager
 import streamlit as st
 import pandas as pd 
 
@@ -24,8 +24,8 @@ python_repl = PythonREPL()
 search = DuckDuckGoSearchRun()
 
 load_dotenv()
-
-llm = OpenAI(temperature=0.6, streaming=True, openai_api_key=st.secrets["OPENAI_API_KEY"])
+# llm = OpenAI(model_name='text-davinci-003', verbose=True)
+llm = OpenAI(model_name='text-davinci-003', verbose=True,temperature=0, streaming=True, openai_api_key=st.secrets["OPENAI_API_KEY"])
 
 from langchain.agents import Tool
 
@@ -64,20 +64,22 @@ uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
-    results_df = pd.DataFrame(columns=['prompt', 'results'])  # Create a new DataFrame to store results
-    for index, row in df.iterrows():
-        prompt = row['Prompt']
-        response = agent.run(prompt)
-        results_df = results_df.append({'prompt': prompt, 'results': response}, ignore_index=True)
+    st.write(df)
+    if st.button("Research"):
+        results_df = pd.DataFrame(columns=['prompt', 'results'])  # Create a new DataFrame to store results
+        for index, row in df.iterrows():
+            prompt = row['Prompt']
+            response = agent.run(prompt)
+            results_df = results_df.append({'prompt': prompt, 'results': response}, ignore_index=True)
 
-    # Display the results DataFrame
-    st.write("Results:")
-    st.dataframe(results_df)
+        # Display the results DataFrame
+        st.write("Results:")
+        st.dataframe(results_df)
 
-    # Download button for results DataFrame
-    st.download_button(
-        label="Download Results CSV",
-        data=results_df.to_csv(index=False),
-        file_name="research_results.csv",
-        mime="text/csv"
-    )
+        # Download button for results DataFrame
+        st.download_button(
+            label="Download Results CSV",
+            data=results_df.to_csv(index=False),
+            file_name="research_results.csv",
+            mime="text/csv"
+        )
